@@ -1,0 +1,8 @@
+{
+  "name": "mindseek-skool-skills",
+  "description": "MindSeek AI 學院免費技能包：handoff（交接單，換對話不用重講）",
+  "author": {
+    "name": "tianheng-ai"
+  },
+  "repository": "https://github.com/tianheng-ai/Mindseek-SKOOL-skills"
+}
