@@ -30,17 +30,14 @@ started: <UTC 時間，如 2026-08-26T22:10Z>
 
 <貼實際輸出，不是「應該會過」。>
 
-- [ ] verify:migrations（若專案有）
-- [ ] typecheck
-- [ ] lint
-- [ ] test
-- [ ] build
-- [ ] UI 改動：已用瀏覽器實走過每個改動畫面與斷點（**測試綠不等於做完**）
-- [ ] 新增使用者可觸發的動作：本 PR 已帶對應埋點事件
+這個 repo 沒有程式、沒有建置，閘門照專案卡 AGENTS.md：
+
+- [ ] `claude plugin validate .` 通過，看得到每個技能
+- [ ] `python3 -m json.tool` 讀得懂 `.claude-plugin/plugin.json` 與 `marketplace.json`
+- [ ] 新增或改名技能：README 技能表與兩個 json 的說明已同步
+- [ ] 合併後：用公開網址抓一次 `skills/<技能名>/SKILL.md`，跟 repo 版本一致
 
 ## 營運影響
 
-- migration：<無／有——合併後如何上線、是否要先套 DB>
-- 環境變數：<無／新增了什麼>
-- 相依套件：<無／新增或升級了什麼>
-- 回滾方式：<怎麼關掉或還原>
+- 會員要不要重裝：<不用／要——Skool 頁面怎麼通知>
+- 回滾方式：<怎麼還原>

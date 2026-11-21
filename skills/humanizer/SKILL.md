@@ -356,10 +356,11 @@ Before returning the final rewrite, scan it for `—` and `–`. Any hit means t
 
 ## CHINESE TEXT PATTERNS（中文稿另外要盯的）
 
-上面 33 種以英文為主。原文是中文時，上面適用的照樣套用（例如 §9 否定式排比、§10 湊三個、§14 破折號、§25 結尾口號），再加上這一節。中文稿的規則：
+上面的清單以英文為主。原文是中文時，上面適用的照樣套用（例如 §9 否定式排比、§10 湊三個、§14 破折號、§25 結尾口號），再加上這一節。中文稿的規則：
 
+- **這三條不套用到中文：** §17 標題大寫、§19 彎引號改直引號、§26 連字號，都只管英文。中文稿的引號不要改成半形 "。
 - **用字跟著原文走。** 原文是繁體就維持繁體，台灣用語不要換成大陸用語（例如「影片」不改「視頻」、「資料」不改「數據」、「專案」不改「項目」），簡體稿反之。
-- **標點用全形。** 中文句子裡用「，。：；？！」與「」，不要混進半形逗號句號。
+- **標點用全形，引號照原文慣例。** 中文句子裡用「，。：；？！」，不要混進半形逗號句號。引號原文用「」就維持「」，簡體稿原文用 “” 就維持 “”。
 - **一樣不准編造事實。** 中文稿常見的空話（「顯著提升」「大幅改善」）只能改成原文裡有的具體內容；原文沒有數字就寫平實的版本，不要自己補百分比。
 
 ### C1. 「不僅是 X，更是 Y」與「不是 X，而是 Y」
@@ -384,9 +385,9 @@ Before returning the final rewrite, scan it for `—` and `–`. Any hit means t
 
 **要盯的詞：** 賦能、助力、打造、深耕、彰顯、聚焦、全方位、多維度、一站式、生態、閉環、抓手、底層邏輯、顆粒度、至關重要、不可或缺、日新月異、蓬勃發展、劃時代、里程碑。
 **問題：** 這是中文版的 §7 AI 高頻詞。一句話裡疊兩三個，讀者就讀不出到底做了什麼。
-**改法：** 換成具體動作：誰、對什麼、做了什麼。
+**改法：** 換成具體動作：誰、對什麼、做了什麼。具體內容只能用原文或使用者給的；原文只有大詞、沒有具體內容，就寫成平實的短句，或問使用者實際做了什麼。
 **改前：**
-> 我們致力於打造一站式的數位化平台，全方位賦能中小企業的業務增長。
+> 我們致力於打造一站式的數位化平台，全方位賦能中小企業的業務增長：接單、開發票、追帳款都能在同一個系統完成。
 **改後：**
 > 我們做了一套系統，讓中小企業在同一個地方接單、開發票、追帳款。
 
@@ -394,7 +395,11 @@ Before returning the final rewrite, scan it for `—` and `–`. Any hit means t
 
 **要盯的寫法：** 連續三、四個四字詞並列，例如「高效便捷、安全可靠、靈活多變」。
 **問題：** 聽起來工整，每個詞都沒有內容；跟 §10 湊三個是同一件事。
-**改法：** 留一個最重要的，用一句具體的話說明。
+**改法：** 留一個最重要的，用一句具體的話說明（具體內容一樣要來自原文）。
+**改前：**
+> 這套系統高效便捷、安全可靠、靈活多變，登入要先通過手機驗證碼。
+**改後：**
+> 這套系統登入要先通過手機驗證碼。
 
 ### C5. 翻譯腔
 
@@ -403,7 +408,7 @@ Before returning the final rewrite, scan it for `—` and `–`. Any hit means t
 **改前：**
 > 我們對客戶回饋進行了一個全面的分析。
 **改後：**
-> 我們把客戶回饋全部看過一遍。
+> 我們全面分析了客戶回饋。
 
 ### C6. 破折號「——」
 
@@ -481,6 +486,8 @@ When you see these, lean toward leaving the prose alone — they are evidence of
 In pasted-text mode, deliver the draft, the brief "still-AI" bullets, the final rewrite, and (optionally) a short summary of changes. In file and embedded modes, run the same loop but deliver only what the mode calls for (see Invocation Modes).
 
 ## Reference
+
+Original humanizer skill: Copyright (c) 2025 Siqi Chen, MIT License (https://github.com/blader/humanizer). The CHINESE TEXT PATTERNS section was added by MindSeek AI 學院. The full license text is in the LICENSE file next to this skill.
 
 This skill is based on [Wikipedia:Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing), maintained by WikiProject AI Cleanup. The patterns documented there come from observations of thousands of instances of AI-generated text on Wikipedia.
 
