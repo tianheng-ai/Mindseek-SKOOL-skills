@@ -1,0 +1,65 @@
+#!/bin/bash
+# 範例：去掉檔名的 .example 才會生效。採用能力「資料庫隔離」時，`devkit.py install <repo> db-isolation`
+# 會把這支放成 post-start.sh（代入你填的設定），連同做事的 test-db.py 一起放進來。
+# start-task 開好 worktree、裝完依賴之後執行這支；收工時 wrap-up 跑 cleanup.sh 把這裡建的東西刪掉。
+#
+# 用途：給這個任務一套自己的 runtime，跟其他同時在跑的 session 隔開。最要緊的是資料庫——
+# 測試會清資料（只跑一個測試檔，它的 beforeEach 也會清），多個 session 共用一個本機資料庫，
+# 就會互相把資料清掉，連你正在瀏覽器裡驗收的資料也一起不見。所以分成兩套：
+#   - 驗收用（dev server、seed、瀏覽器實走）：照舊用主 checkout 那個本機資料庫，這支不動它
+#   - 測試用：連線寫進 worktree 的 .env.local 與 .env.test.local 的「測試連線變數」
+# 測試設定要強制讀測試連線變數（讀不到就失敗，不要退回 dev 的連線），不靠人記得。
+# 測試連線變數一定要跟 dev server 用的分開（例如測試讀 TEST_DATABASE_URL、dev server 讀 DATABASE_URL）。
+# 只准本機資料庫（localhost、127.0.0.1、::1、unix socket），指向別台會直接停下。
+#
+# 沒有這支的話，所有 session 共用同一套；那就要在專案卡寫排隊規則
+#（例如「連資料庫的測試，含只跑一個檔，同一時間只有一個 session 跑」）。
+# 專案沒有資料庫、只想隔開暫存目錄之類的，把「資料庫」那段刪掉，只留最下面你要的。
+#
+# 拿得到的環境變數：
+#   DEV_TASK_WORKTREE  這個任務的 worktree 絕對路徑
+#   DEV_TASK_MAIN      主 checkout 絕對路徑
+#   DEV_TASK_SLUG      任務代號（分支名去掉前綴）
+#   DEV_TASK_PORT      分到的 dev server 埠號
+set -eu
+
+# ── 資料庫 ──────────────────────────────────────────────────────────────────────────────
+# 測試連線變數名（測試設定讀的那一個）
+TEST_DB_VAR="__TEST_DB_VAR__"
+# 隔離方式：
+#   database：同一個本機 Postgres 裡，每個 worktree 一個 database（名稱＝起點資料庫名_任務代號_雜湊）。
+#             起點是 worktree env 檔裡 TEST_DB_VAR 現有的值，例如 postgresql://postgres:postgres@127.0.0.1:5432/app_test
+#   supabase：本機 Supabase 這類多容器方案，一套就是一整組容器，每個 worktree 開一套太重。改成兩套：
+#             驗收一套（照舊的 supabase/）、測試一套（SUPABASE_TEST_DIR/supabase/config.toml，
+#             project_id 與所有 port 都換一組），測試那套只開 SUPABASE_EXCLUDE 以外的容器。
+#             測試那套是所有 worktree 共用的：連資料庫的測試之間還是要照專案卡的排隊規則輪流跑，
+#             但驗收那套不會再被測試清掉。測試要經過 Supabase API 時只能用這個方式。
+ISOLATION="__ISOLATION__"
+# supabase 方式才用：測試那套的資料夾（相對 repo 根目錄，進版控）
+SUPABASE_TEST_DIR="supabase-test"
+# supabase 方式才用：測試那套不開的容器（看你們的測試打到哪些服務再增減）
+SUPABASE_EXCLUDE="studio,imgproxy,inbucket,edge-runtime,logflare,vector"
+# 建好（或起好）測試資料庫之後要跑的 migration 指令；新庫的連線在 $DEV_TASK_TEST_DB_URL。沒填的話資料庫是空的，
+# 開工健檢會提醒。例：DATABASE_URL="$DEV_TASK_TEST_DB_URL" pnpm prisma migrate deploy
+#                 例：psql "$DEV_TASK_TEST_DB_URL" -v ON_ERROR_STOP=1 -f db/schema.sql
+MIGRATE_CMD=""
+
+case "$TEST_DB_VAR" in __*__) echo "post-start.sh：先把 TEST_DB_VAR 改成你們測試用的連線變數名" >&2; exit 1 ;; esac
+case "$ISOLATION" in __*__) echo "post-start.sh：先把 ISOLATION 改成 database 或 supabase" >&2; exit 1 ;; esac
+helper="$(dirname "$0")/test-db.py"
+if [ ! -f "$helper" ]; then
+  echo "post-start.sh：同一個資料夾少了 test-db.py——跑 devkit.py install <repo> db-isolation 放好" >&2
+  exit 1
+fi
+url=$(python3 -X utf8 "$helper" create --var "$TEST_DB_VAR" --isolation "$ISOLATION" \
+  --supabase-dir "$SUPABASE_TEST_DIR" --supabase-exclude "$SUPABASE_EXCLUDE")
+if [ -n "$MIGRATE_CMD" ]; then
+  DEV_TASK_TEST_DB_URL="$url" bash -c "$MIGRATE_CMD"
+else
+  echo "⚠ MIGRATE_CMD 沒填：測試資料庫還沒有資料表，在 collab/dev-task-hooks/post-start.sh 填上你們的 migration 指令"
+fi
+
+# ── 其他 runtime ──────────────────────────────────────────────────────────────────────
+# 例：每個任務一個暫存目錄
+# mkdir -p "/tmp/${DEV_TASK_SLUG}"
+# echo "TMPDIR=/tmp/${DEV_TASK_SLUG}" >> "${DEV_TASK_WORKTREE}/.env.local"

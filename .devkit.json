@@ -1,0 +1,59 @@
+{
+  "integration_branch": "main",
+  "production_branch": "main",
+  "kit_version": "0.4.0",
+  "capabilities": {
+    "analytics": {
+      "status": "declined",
+      "reason": "沒有網站或程式，只有技能說明檔"
+    },
+    "arch-gate": {
+      "status": "adopted"
+    },
+    "ci-db-tests": {
+      "status": "declined",
+      "reason": "沒有資料庫也沒有測試"
+    },
+    "ci-gate": {
+      "status": "declined",
+      "reason": "沒有程式碼，沒有型別檢查、lint、build 可跑"
+    },
+    "db-isolation": {
+      "status": "declined",
+      "reason": "不適用：沒有資料庫"
+    },
+    "migration-check": {
+      "status": "declined",
+      "reason": "沒有資料庫 migration"
+    },
+    "nightly-full": {
+      "status": "declined",
+      "reason": "沒有測試"
+    },
+    "project-memory": {
+      "status": "declined",
+      "reason": "公開 repo 會員看得到，內部決策與交接記在 Obsidian 腦子的 Skool 建置紀錄"
+    },
+    "sentry": {
+      "status": "declined",
+      "reason": "沒有網站或程式"
+    },
+    "staging-prod": {
+      "status": "declined",
+      "reason": "沒有部署；合併進 main 就是發布，會員直接從公開 repo 下載"
+    },
+    "supabase-ledger": {
+      "status": "declined",
+      "reason": "不用 Supabase"
+    },
+    "test-tiers": {
+      "status": "declined",
+      "reason": "沒有測試檔；驗收是 json 能解析＋公開網址抓得到"
+    },
+    "vercel-build-gate": {
+      "status": "declined",
+      "reason": "不用 Vercel"
+    }
+  },
+  "manual_done": {}
+}

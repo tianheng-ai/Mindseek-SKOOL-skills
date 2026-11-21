@@ -1,0 +1,20 @@
+#!/bin/bash
+# 範例：去掉檔名的 .example 才會生效（採用能力「資料庫隔離」時 devkit.py install 會放好）。
+# wrap-up 收尾時執行這支，清掉 post-start.sh 建的東西。
+# 拿得到的環境變數：DEV_TASK_WORKTREE、DEV_TASK_MAIN、DEV_TASK_SLUG（意思同 post-start.sh；沒有 DEV_TASK_PORT）。
+set -eu
+
+# ── 資料庫 ──────────────────────────────────────────────────────────────────────────────
+# 只刪 post-start.sh 為這個 worktree 建的那一個：env 檔裡要有 post-start 留的標記、名稱完全等於
+# 「起點資料庫名_任務代號_雜湊」、連線指向本機。沒有標記（post-start 沒跑或中途失敗）就什麼都不刪；
+# supabase 方式的測試那套是共用的，收工不停也不刪。刪不掉（例如還有連線、資料庫版本太舊）會 exit 非 0，wrap-up 會報出來。
+helper="$(dirname "$0")/test-db.py"
+if [ -f "$helper" ]; then
+  python3 -X utf8 "$helper" drop
+else
+  echo "（沒有 test-db.py，資料庫這段跳過）"
+fi
+
+# ── 其他 runtime ──────────────────────────────────────────────────────────────────────
+# 例：刪掉這個任務的暫存目錄
+# rm -rf "/tmp/${DEV_TASK_SLUG}"
