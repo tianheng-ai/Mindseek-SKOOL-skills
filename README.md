@@ -10,6 +10,9 @@
 |---|---|---|
 | handoff（交接單） | 收工前讓 Agent 寫一張交接單，下一個對話貼一行就接著做 | 在對話裡說「寫交接」 |
 | humanizer（語氣修整） | 把 AI 寫的稿子改回像人寫的，中英文都能用；不改事實、不亂補數字 | 說「用 humanizer 改這段」，再貼上文字或給檔案 |
+| pdf-to-markdown（文件先轉再讀） | PDF、Word、簡報、試算表先在你的電腦上轉成 Markdown 文字檔，Agent 再讀轉好的那一份 | 給它檔案，說「先轉成 Markdown 再讀」 |
+
+pdf-to-markdown 用的轉檔工具是微軟開源的 MarkItDown（MIT 授權），第一次用時 Agent 會幫你裝。轉檔在你的電腦上做，不會把檔案傳到別的服務。
 
 humanizer 改編自 MIT 授權的開源技能，加上中文稿的規則；授權條款在 `skills/humanizer/LICENSE`。
 
@@ -41,7 +44,7 @@ humanizer 改編自 MIT 授權的開源技能，加上中文稿的規則；授�
 你現在有哪些技能可以用？
 ```
 
-清單裡看得到你裝的技能（例如 handoff、humanizer）就是裝好了。
+清單裡看得到你裝的技能（例如 handoff、humanizer、pdf-to-markdown）就是裝好了。
 
 ## 安全提醒
 
